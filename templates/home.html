@@ -6,308 +6,10 @@
     <title>Chatzy - AI Assistant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/logo.svg') }}">
-    <!-- Additional CSS for enhanced UI -->
-    <style>
-        /* Override default sidebar behavior - hidden by default */
-        .sidebar {
-            transform: translateX(-100%);
-        }
-    
-        .sidebar.open {
-            transform: translateX(0);
-        }
-    
-        .main-content {
-            margin-left: 0;
-        }
-    
-        .main-content.sidebar-open {
-            margin-left: 320px;
-        }
-    
-        /* Show menu toggle on all devices */
-        .menu-toggle {
-            display: block !important;
-        }
-    
-        /* Enhanced sidebar styles */
-        .logo-content {
-            display: flex;
-            flex-direction: column;
-        }
-    
-        .logo-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-    
-        .new-chat-shortcut {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-left: auto;
-        }
-    
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-    
-        .section-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-    
-        .refresh-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-    
-        .refresh-btn:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-    
-        .history-loading {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-    
-        .loading-spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--border-color);
-            border-top: 2px solid var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-    
-        .sidebar-stats {
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-    
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-    
-        .action-btn span {
-            font-size: 0.8rem;
-        }
-    
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 0 0;
-            border-top: 1px solid var(--border-color);
-        }
-    
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--accent-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.8rem;
-        }
-    
-        .user-info {
-            display: flex;
-            flex-direction: column;
-        }
-    
-        .user-name {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-    
-        .user-status {
-            font-size: 0.75rem;
-            color: var(--success);
-        }
-    
-        /* Enhanced welcome section */
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-    
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--accent-teal);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-    
-        .feature-content {
-            display: flex;
-            flex-direction: column;
-        }
-    
-        .feature-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-    
-        .feature-description {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-    
-        .welcome-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-    
-        .welcome-action-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--accent-primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-    
-        .welcome-action-btn.secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-    
-        .welcome-action-btn:hover {
-            transform: translateY(-2px);
-        }
-    
-        /* Enhanced input section */
-        .input-header {
-            margin-bottom: 0.5rem;
-        }
-    
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-    
-        .typing-dots {
-            display: flex;
-            gap: 0.2rem;
-        }
-    
-        .typing-dots span {
-            width: 4px;
-            height: 4px;
-            background: var(--accent-teal);
-            border-radius: 50%;
-            animation: loadingPulse 1.5s ease-in-out infinite;
-        }
-    
-        .typing-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-    
-        .typing-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-    
-        .input-main {
-            display: flex;
-            align-items: flex-end;
-            gap: 0.75rem;
-        }
-    
-        .hint-group {
-            display: flex;
-            gap: 1rem;
-        }
-    
-        .hint-item {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.75rem;
-        }
-    
-        /* Desktop specific styles */
-        @media (min-width: 769px) {
-            .close-sidebar-btn {
-                display: block !important;
-            }
-        }
-    
-        /* Mobile specific enhancements */
-        @media (max-width: 768px) {
-    
-            /* Hide input hints on mobile */
-            .input-hints {
-                display: none;
-            }
-    
-            .welcome-features {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-    
-            .welcome-actions {
-                flex-direction: column;
-            }
-    
-            .user-section {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-    
-            .sidebar {
-                width: 100%;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Hidden data for Flask template -->
@@ -315,69 +17,87 @@
         <div id="server-output">{{ output if output else '' }}</div>
     </div>
     
+    <!-- Professional Top Header -->
+    <header class="top-header" id="topHeader">
+        <div class="header-left">
+            <div class="header-logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="header-brand">
+                <h1>Chatzy</h1>
+                <span>AI Assistant</span>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <div class="breadcrumb">
+                <span id="breadcrumbText">Start a new conversation</span>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="header-btn history-toggle-btn" id="historyToggleBtn" title="Toggle History" aria-label="Toggle chat history">
+                <i class="fas fa-history"></i>
+                <span class="btn-label">History</span>
+            </button>
+            <button class="header-btn new-chat-header-btn" onclick="startNewChat()" title="New Chat" aria-label="Start new chat">
+                <i class="fas fa-plus"></i>
+                <span class="btn-label">New Chat</span>
+            </button>
+        </div>
+    </header>
+
     <!-- Mobile Menu Toggle Button -->
     <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
         <i class="fas fa-bars"></i>
     </button>
+    
     <!-- Overlay for mobile -->
     <div class="overlay" id="overlay"></div>
     
-    <!-- Redesigned Sidebar -->
+    <!-- Professional Sidebar - History Modal -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <!-- Enhanced Logo Section -->
+            <!-- Logo Section in Modal -->
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Chatzy Logo" class="logo-img" />
+                    <i class="fas fa-robot"></i>
                 </div>
                 <div class="logo-content">
-                    <span class="logo-text">Chatzy</span>
-                    <span class="logo-subtitle">AI Assistant</span>
+                    <span class="logo-text">History</span>
+                    <span class="logo-subtitle">Chat History</span>
                 </div>
             </div>
             
-            <!-- Close button for all devices -->
-            <button class="close-sidebar-btn" id="closeSidebarBtn" aria-label="Close sidebar">
+            <!-- Close button -->
+            <button class="close-sidebar-btn" id="closeSidebarBtn" aria-label="Close history">
                 <i class="fas fa-times"></i>
-            </button>
-            
-            <!-- New Chat Button with enhanced styling -->
-            <button class="new-chat-btn" onclick="startNewChat()" aria-label="Start new chat">
-                <i class="fas fa-plus"></i>
-                <span>New Chat</span>
-                <span class="new-chat-shortcut">Ctrl+I</span>
             </button>
         </div>
     
-        <!-- Enhanced Navigation -->
+        <!-- Navigation -->
         <nav class="sidebar-nav">
             <div class="nav-section">
                 <div class="section-header">
-                    <h3><i class="fas fa-clock"></i> Recent Chats</h3>
-                    <button class="refresh-btn" onclick="refreshHistory()" title="Refresh History" aria-label="Refresh chat history">
-                        <i class="fas fa-refresh"></i>
+                    <h3><i class="fas fa-history"></i> Recent Chats</h3>
+                    <button class="refresh-btn" onclick="refreshHistory()" title="Refresh History" aria-label="Refresh">
+                        <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
                 <div class="history-list" id="historyList">
-                    <!-- Enhanced loading state -->
                     <div class="history-loading" id="historyLoading">
                         <div class="loading-spinner"></div>
                         <span>Loading conversations...</span>
                     </div>
-                    <!-- History items will be populated here -->
                 </div>
             </div>
         </nav>
     
-        <!-- Enhanced Footer -->
+        <!-- Footer -->
         <div class="sidebar-footer">
             <div class="sidebar-actions">
-                <button class="action-btn" onclick="refreshHistory()" title="Refresh History" aria-label="Refresh history">
-                    <i class="fas fa-refresh"></i>
-                    <span>Refresh</span>
-                </button>
-                <button class="action-btn danger" onclick="clearHistory()" title="Clear All History" aria-label="Clear all history">
-                    <i class="fas fa-trash"></i>
+                <button class="action-btn" onclick="clearHistory()" title="Clear All History" aria-label="Clear all">
+                    <i class="fas fa-trash-alt"></i>
                     <span>Clear All</span>
                 </button>
             </div>
@@ -391,25 +111,39 @@
             <!-- Welcome Section -->
             <div class="welcome-section" id="welcomeSection">
                 <div class="welcome-logo">
-                    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Chatzy Logo" class="welcome-img" />
-                    </div>
+                    <i class="fas fa-sparkles"></i>
+                </div>
                 <h1 class="welcome-title">Welcome to Chatzy</h1>
-                <p class="welcome-subtitle">Your intelligent AI assistant ready to help with any questions or conversations.</p>
+                <p class="welcome-subtitle">Your intelligent AI assistant ready to help with any questions or tasks.</p>
                 
+                <div class="welcome-features">
+                    <div class="feature-item">
+                        <i class="fas fa-lightning-bolt"></i>
+                        <span>Instant Responses</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Private & Secure</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-brain"></i>
+                        <span>AI Powered</span>
+                    </div>
+                </div>
             </div>
+            
             <!-- Messages Container -->
             <div class="messages-container" id="messagesContainer">
                 <!-- Messages will be populated here -->
             </div>
     
-            <!-- Enhanced Input Section -->
+            <!-- Input Section -->
             <div class="input-section-container">
                 <form id="chatForm" class="input-section">
                     <div class="input-wrapper">
-                        <textarea id="chatInput" class="chat-input" placeholder="Ask anything..." rows="1" autocomplete="off"
-                            spellcheck="true"></textarea>
+                        <textarea id="chatInput" class="chat-input" placeholder="Ask me anything..." rows="1" autocomplete="off" spellcheck="true"></textarea>
                         <div class="input-actions">
-                            <button type="submit" id="sendBtn" class="send-btn" title="Send message">
+                            <button type="submit" id="sendBtn" class="send-btn" title="Send message (Enter)">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -417,11 +151,10 @@
                     <div class="input-hints">
                         <span><kbd>Enter</kbd> to send</span>
                         <span><kbd>Shift + Enter</kbd> for new line</span>
-                        <span><kbd>Ctrl + I</kbd> for new chat</span>
+                        <span><kbd>Ctrl + K</kbd> for new chat</span>
                     </div>
                 </form>
             </div>
-
         </div>
     </main>
     

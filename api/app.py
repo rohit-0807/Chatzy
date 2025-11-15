@@ -25,7 +25,7 @@ def add_to_history(user_input, bot_response):
         session['chat_history'] = []
     
     conversation = {
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        # 'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'user_input': user_input,
         'bot_response': bot_response
     }
